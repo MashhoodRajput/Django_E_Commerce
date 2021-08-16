@@ -1,0 +1,248 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %} {% endblock %}
+{% block css %}
+<style>
+
+
+  /* Aligment for Col-md-3 to show in row*/
+  .col-md-3 {
+    display: inline-block;
+    /*Show in row if display:flex that show in column*/
+    margin-left: -4px;
+  }
+  .card-img,
+  .card-img-top {
+    height: 210px;
+  }
+
+  .pricingdiv {
+    font-size: 16px;
+    justify-content: top;
+    font-family: 'Source Sans Pro', Arial, sans-serif;
+  }
+
+  /*To Set the Div hover Effect*/
+     .productHover {
+   /* border: 1px solid gray; */
+    transition: all 4.5s;
+
+  }
+
+
+
+  .productHover:hover {
+    /* when mouse hover over Product */
+    transition: all 1.5s;
+    z-index: 100;
+    transform: scale(1.05);
+    /*box-shadow: 0 0 10px gray;*/
+    box-shadow: 0 0 13px 3px grey;
+  }
+
+  /*Contract the Size of Text, in this Description text show minimum line*/
+  .text-concat {
+    overflow: hidden;
+    max-height: 5.6em;
+    /* (Number of lines you want visible) * (line-height) */
+    line-height: 1.2em;
+    text-align: justify;
+  }
+
+  .carousel-indicators .active {
+    background-color: blue;
+  }
+
+  .carousel-indicator li {
+    background-color: blue;
+  }
+
+  .carousel-indicators {
+    bottom: 0;
+  }
+
+  /*Horizental line/ (Show) Stars in horizental line*/
+  hr {
+    width: 50% !important;
+    height: 25px !important;
+    border: none;
+    margin: auto;
+    margin-top: 5% !important;
+    margin-bottom: 5%;
+    background-repeat: round;
+    background-position: center;
+    background-color: transparent;
+    background-image: url(/static/img/slide.gif);
+  }
+
+  /*Made me Dead Tired :), About this my 4 product imaages, titles, descriptions
+is well display with equal height in one row, means carousel style*/
+  strong {
+    padding: 20px 0px 0px 0px;
+    overflow: hidden;
+    display: flex;
+    font-weight: 100;
+    height: 120px;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  .reveal{
+    position: relative;
+    transform: translateY(150px);
+    opacity: 0;
+    transition: all 2s ease-in-out;
+  }
+
+.reveal.appear{
+
+    transform: translateY(0px);
+    -webkit-transform: translateY(0px);
+    -moz-transform: translateY(0px);
+
+    opacity: 1;
+  }
+
+
+ /* for learing purpose, scale or rotate, skew
+  @keyframes translateY {
+    0% {
+      transform: scale(1 , 2);
+    }
+    100% {
+      transform: scale(0.5 , 0.8);
+    }
+  } */
+  /*media Queries*/
+  @media (max-width: 770px) and (min-width: 500px)
+{
+     .reveal{
+         transition:none;
+         transform: translateY(0px);
+     }
+    .reveal.appear {
+    opacity: 1;
+    transition: none;
+    transform: translateY(0px);
+}
+.col-sm-3{
+    width:50%;
+}
+.card{
+    align-items: center;
+    justify-content:center;
+}
+}
+@media (max-width: 1199px) {
+  .btn-primary{
+    width: 100%;
+  }
+  .btn{
+    justify-content: center;
+    display: flex;
+    margin: 3px;
+}}
+</style>
+{% endblock css %}
+{% block content1 %}
+<!-- Start Categories of The Month -->
+<section class="container py-5">
+  <div class="row text-center pt-3">
+    <div class="col-lg-6 m-auto">
+<h1 class="h1">Categories of The Month</h1>
+      <p>
+        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+        officia deserunt mollit anim id est laborum.
+      </p>
+    </div>
+  </div>
+  <!-- End of Start Categories of The Month -->
+  <!--Slideshow starts here -->
+  <!-- Start Of Row -->
+  <div class="row">
+      <!-- Start of Parent forLoop -->
+      {% for Nslide, Products, range in allProducts %}
+
+      <hr>
+      <h5 class="my-4 text-center">Flash Sale On {{Products.0.Product_Category}} - Recommended Items</h5>
+      <div id="carousel{{forloop.counter}}" class="carousel slide carousel-fade chek" data-bs-ride="carousel">
+        <ul class="carousel-indicators">
+          <button type="button" data-bs-target="#carousel{{forloop.counter}}" data-bs-slide-to="0"
+            class="active"></button>
+          <!-- Start of Range forloop -->
+          {% for i in range %}
+          <button type="button" data-bs-target="#carousel{{forloop.parentloop.counter}}"
+            data-bs-slide-to="{{i}}"></button>
+          {% endfor %}
+          <!-- End of Rang forloop -->
+        </ul>
+        <!-- Start of Div => pricing -->
+        <div class="pricingdiv" id="slider-wrapper">
+          <div class="carousel-inner ">
+            <!-- Start of Carousel-item Active -->
+            <div class="carousel-item active">
+              <!-- Start of (Product) forloop -->
+              {% for i in Products %}
+              <!-- Start of Div (Col) -->
+              <div class="col-xs-3 col-sm-3 col-md-3 p-2 mt-3 reveal">
+                  <!-- Start of Div (productHover) -->
+                  <div class="productHover gallery-items">
+                    <div class="card card-body">
+                      <img src='{{i.Product_Image}}' class="xzoom rounded-circle border card-img-top" />
+                    <!-- start Div (card-body) -->
+                    <div class="card-body">
+                      <h5>
+                        <strong>
+                          <a class="dark-grey-text">{{i.Product_name}}</a>
+                        </strong>
+                      </h5>
+                      <p class="card-text text-concat ">{{i.Product_Description}}</p>
+                      <div class="row">
+                        <div class="col-sm-12 ">
+                      <button id="pr{{i.id}}" class="btn btn-primary btn-sm shoppingCart" onclick="('productId = {{i.id}}')">Add to Cart</button>
+                      <a href="/Shop/products/productsView/{{i.id}}"><button id="qv{{i.id}}" class="btn btn-primary btn-sm shoppingCart ">QuickView</button></a>
+                    </div>
+                  </div>
+                  </div>
+                    <!-- End Div (card-body) -->
+                  </div>
+                </div>
+                <!-- End of Div (productHover) -->
+              </div>
+              <!-- End of Div (Col)  -->
+              {% if forloop.counter|divisibleby:4 and forloop.counter > 0 and not forloop.last %}
+            </div>
+            <!-- End of Div (carousel-item active) -->
+            <!-- Start of Div (carousel-item) -->
+            <div class="carousel-item">
+              {% endif%}
+              {% endfor%}
+              <!-- End forloop (Product) -->
+            </div>
+            <!-- End Of (carousel-item) -->
+          </div>
+          <!-- End Div (carousel-inner) -->
+        </div>
+        <!-- End of Div (pricingDiv) -->
+        <!-- <a class="carousel-control-prev text-decoration-none w-auto ps-3" href="#carousel{{ forloop.counter }}" role="button" data-bs-slide-to="prev">
+          <i class="carousel-control-prev"></i>
+        </a>
+        <a class="carousel-control-next text-decoration-none w-auto pe-3" href="#carousel{{ forloop.counter }}" role="button" data-bs-slide-to="next">
+          <i class="fas fa-chevron-right"></i>
+        </a> -->
+
+      </div>
+      </div>
+
+<!-- here       -->
+        </div>
+      <!-- End starting (carousel) -->
+      {% endfor %}
+      <!-- End of forloop (allProducts) -->
+    </div>
+<!-- End of starting (row) class -->
+</section>
+<!-- End Banner Hero -->
+
+{% endblock content1 %}
